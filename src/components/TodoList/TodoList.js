@@ -2,6 +2,7 @@ import React, { useState } from "react";
 
 function TodoList({ todo, setTodo }) {
   const [edit, setEdit] = useState(null);
+  const [value, setValue] = useState("");
 
   function deleteTodo(id) {
     let newTodo = [...todo].filter((item) => item.id != id);
@@ -18,8 +19,20 @@ function TodoList({ todo, setTodo }) {
     setTodo(newTodo);
   }
 
-  function editTodo(id) {
+  function editTodo(id, title) {
     setEdit(id);
+    setValue(title);
+  }
+
+  function saveTodo(id) {
+    let newTodo = [...todo].map((item) => {
+      if (item.id == id) {
+        item.title = value;
+      }
+      return item;
+    });
+    setTodo(newTodo);
+    setEdit(null);
   }
 
   return (
@@ -28,7 +41,7 @@ function TodoList({ todo, setTodo }) {
         <div key={item.id}>
           {edit == item.id ? (
             <div>
-              <input />
+              <input value={value} onChange={(e) => setValue(e.target.value)} />
             </div>
           ) : (
             <div>{item.title}</div>
@@ -36,12 +49,14 @@ function TodoList({ todo, setTodo }) {
 
           {edit == item.id ? (
             <div>
-              <button>Сохранить</button>
+              <button onClick={() => saveTodo(item.id)}>Сохранить</button>
             </div>
           ) : (
             <div>
               <button onClick={() => deleteTodo(item.id)}>Удалить</button>
-              <button onClick={() => editTodo(item.id)}>Редактировать</button>
+              <button onClick={() => editTodo(item.id, item.title)}>
+                Редактировать
+              </button>
               <button onClick={() => statusTodo(item.id)}>
                 Закрыть / Открыть
               </button>
