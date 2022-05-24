@@ -1,4 +1,14 @@
 import React, { useState } from "react";
+import { Button } from "react-bootstrap";
+import s from "./TodoList.module.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faEdit,
+  faLock,
+  faLockOpen,
+  faSave,
+  faTrash,
+} from "@fortawesome/free-solid-svg-icons";
 
 function TodoList({ todo, setTodo }) {
   const [edit, setEdit] = useState(null);
@@ -38,32 +48,46 @@ function TodoList({ todo, setTodo }) {
   return (
     <div>
       {todo.map((item) => (
-        <div key={item.id}>
+        <div key={item.id} className={s.listItems}>
           {edit == item.id ? (
             <div>
               <input value={value} onChange={(e) => setValue(e.target.value)} />
             </div>
           ) : (
-            <div>{item.title}</div>
+            <div className={item.status ? s.close : ""}>{item.title}</div>
           )}
 
           {edit == item.id ? (
             <div>
-              <button onClick={() => saveTodo(item.id)}>Сохранить</button>
+              <Button onClick={() => saveTodo(item.id)} size="sm">
+                <FontAwesomeIcon icon={faSave} />
+              </Button>
             </div>
           ) : (
             <div>
-              <button onClick={() => deleteTodo(item.id)}>Удалить</button>
-              <button onClick={() => editTodo(item.id, item.title)}>
-                Редактировать
-              </button>
-              <button onClick={() => statusTodo(item.id)}>
-                Закрыть / Открыть
-              </button>
+              <Button onClick={() => deleteTodo(item.id)} size="sm">
+                <FontAwesomeIcon icon={faTrash} />
+              </Button>
+              <Button
+                onClick={() => editTodo(item.id, item.title)}
+                className={s.btn}
+                size="sm"
+              >
+                <FontAwesomeIcon icon={faEdit} />
+              </Button>
+              <Button
+                onClick={() => statusTodo(item.id)}
+                className={s.btn}
+                size="sm"
+              >
+                {item.status ? (
+                  <FontAwesomeIcon icon={faLock} />
+                ) : (
+                  <FontAwesomeIcon icon={faLockOpen} />
+                )}
+              </Button>
             </div>
           )}
-
-          <div>{item.title}</div>
         </div>
       ))}
     </div>
